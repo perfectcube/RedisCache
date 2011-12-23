@@ -1,4 +1,4 @@
-A CakePHP 2.0 plugin enabling <a href="http://redis.io/">Redis</a> backed sessions and caching. Uses the <a href="https://github.com/nrk/predis">Predis</a> library to communicate with Redis. Version 0.7 is included.
+A CakePHP 2.0 plugin enabling Redis (http://redis.io/) backed sessions and caching. Uses the Predis (https://github.com/nrk/predis) library to communicate with Redis. Version 0.7 is included.
 
 Using for Session handling:
 
