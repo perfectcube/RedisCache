@@ -1,6 +1,15 @@
 A CakePHP 2.0 plugin enabling Redis (http://redis.io/) backed sessions and caching. Uses the Predis (https://github.com/nrk/predis) library to communicate with Redis. Version 0.7 is included.
 
-Using for Session handling:
+## Initial setup required
+
+The plugin includes its own bootstrap.php file which must be loaded in the application bootstrap.php file like so:
+CakePlugin::load(array('RedisCache' => array('bootstrap' => true)));
+
+The plugin will, by default, communicate with a Redis server setup on localhost at port 6379 with no password. However
+you may use remote Redis servers if desired. You can also configure different servers for caching and session duties
+as the exact configuration of these may be slightly different for best performance.
+
+## Using for Session handling:
 
 In app/Config/core.php under the session configuration section:
 
@@ -13,7 +22,7 @@ Configure::write('Session', array(
 	));
 
 
-Using for Caching (e.g. for model data):
+## Using for Caching (e.g. for model data):
 
 In app/Config/bootstrap.php
 
