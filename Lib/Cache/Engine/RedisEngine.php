@@ -33,8 +33,8 @@ class RedisEngine extends CacheEngine {
 
         if ( ! isset($this->_Predis)) {
             $this->_Predis = new Predis\Client(
-                RedisConfig::$default['cache']
-                , array('prefix' => $this->settings['prefix'])
+                RedisCache::settings('cache'),
+				array('prefix' => $this->settings['prefix'])
             );
         }
 

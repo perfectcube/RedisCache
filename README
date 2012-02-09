@@ -1,29 +1,13 @@
-A CakePHP 2.0 plugin enabling Redis (http://redis.io/) backed sessions and caching. Uses the Predis (https://github.com/nrk/predis) library to communicate with Redis. Version 0.7 is included.
+Put the following in your bootstrap.php to load RedisCache
 
-## Initial setup required
+ CakePlugin::load('RedisCache', array('bootstrap' => true));
 
-The plugin includes its own bootstrap.php file which must be loaded in the application bootstrap.php file like so:
-CakePlugin::load(array('RedisCache' => array('bootstrap' => true)));
+To change your Caches to use RedisCache put this in bootstrap.php
 
-The plugin will, by default, communicate with a Redis server setup on localhost at port 6379 with no password. However
-you may use remote Redis servers if desired. You can also configure different servers for caching and session duties
-as the exact configuration of these may be slightly different for best performance.
+ RedisCache::configureCache('default');
+ RedisCache::configureCache('_cake_core_', array('prefix'	=> 'cake_core_'));
+ RedisCache::configureCache('_cake_model_', array('prefix'	=> 'cake_model_'));
 
-## Using for Session handling:
+To change your Sessions to use RedisCache put this in your bootstrap.php
 
-In app/Config/core.php under the session configuration section:
-
-Configure::write('Session', array(
-        'cookie' => {{YOUR COOKIE NAME HERE}}
-        , 'timeout' => 60
-        , 'handler' => array(
-            'engine' => 'RedisCache.RedisSession'
-        )
-	));
-
-
-## Using for Caching (e.g. for model data):
-
-In app/Config/bootstrap.php
-
-Cache::config({{ YOUR UNIQUE CACHE NAME HERE }}, array('engine' => 'RedisCache.Redis'));
+ RedisCache::configureSession();
