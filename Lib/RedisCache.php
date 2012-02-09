@@ -11,12 +11,6 @@
  * @copyright Nodes ApS, 2012
  */
 class RedisCache {
-	/**
-	* RedisCache settings
-	*
-	* @var array
-	*/
-	protected static $settings = array();
 
 	/**
 	* Default cache settings
@@ -55,9 +49,7 @@ class RedisCache {
 	protected static $timeoutClosure;
 
 	/**
-	* Configure a new timeout Closure
-	*
-	* It must return a strtotime compatible value
+	* Change the timeout closure
 	*
 	* @param Closure $value
 	* @return void
@@ -95,7 +87,7 @@ class RedisCache {
 	* @return void
 	*/
 	public static function configureCache($name, $settings = array()) {
-		Cache::config($name, array_merge(static::$defaultCacheSettings, array('duration' => static::getCacheTimeout()), $settings));
+		Cache::config($name, array_merge(array('duration' => static::getCacheTimeout()), static::$defaultCacheSettings, $settings));
 	}
 
 	/**
@@ -115,9 +107,21 @@ class RedisCache {
 	}
 
 	/**
+	* Check if a key has configured its settings already
+	*
+	* @param string $key
+	* @return boolean
+	*/
+	public static function hasSettings($key) {
+		return !is_null(Configure::read(sprintf('RedisCache.%s', $key)));
+	}
+
+	/**
 	* Change RedisCache settings
 	*
 	* Just a wrapper for Configure with a key prefix RedisCache
+	*
+	* Key should belong to the "cache" or "session" namespace
 	*
 	* @param string $key	Configure::read / Configure::write compatible key
 	* @param mixed $value	Any value Configure normally would accept
