@@ -54,7 +54,6 @@ class RedisSession implements CakeSessionHandlerInterface {
 		return true;
 	}
 
-
 	/**
 	 * CLOSE
 	 * - Disconnect from Redis
@@ -67,7 +66,6 @@ class RedisSession implements CakeSessionHandlerInterface {
 		return true;
 	}
 
-
 	/**
 	 * READ
 	 * - Return whatever is stored in session ID (as key)
@@ -77,10 +75,9 @@ class RedisSession implements CakeSessionHandlerInterface {
 	 * @access public
 	 * @return boolean
 	 */
-	public function read( $session_id = '' ) {
+	public function read($session_id = '') {
 		return $this->_Predis->get($session_id);
 	}
-
 
 	/**
 	 * WRITE
@@ -92,14 +89,12 @@ class RedisSession implements CakeSessionHandlerInterface {
 	 * @access public
 	 * @return boolean
 	 */
-	public function write( $session_id = '', $data = null ) {
-		if($session_id && is_string($session_id)) {
+	public function write($session_id = '', $data = null) {
+		if ($session_id && is_string($session_id)) {
 			return $this->_Predis->setex($session_id, $this->timeout, $data);
 		}
-
 		return false;
 	}
-
 
 	/**
 	 * DESTROY
@@ -110,11 +105,10 @@ class RedisSession implements CakeSessionHandlerInterface {
 	 * @access public
 	 * @return boolean
 	 */
-	public function destroy( $session_id = '' ) {
+	public function destroy($session_id = '') {
 		// Predis::del returns an integer 1 on delete, convert to boolean
 		return $this->_Predis->del($session_id) ? true : false;
 	}
-
 
 	/**
 	 * GARBAGE COLLECTION
@@ -125,7 +119,7 @@ class RedisSession implements CakeSessionHandlerInterface {
 	 * @access public
 	 * @return boolean
 	 */
-	public function gc( $expires = null ) {
+	public function gc($expires = null) {
 		return true;
 	}
 }

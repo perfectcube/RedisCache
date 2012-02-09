@@ -87,7 +87,8 @@ class RedisCache {
 	* @return void
 	*/
 	public static function configureCache($name, $settings = array()) {
-		Cache::config($name, array_merge(array('duration' => static::getCacheTimeout()), static::$defaultCacheSettings, $settings));
+		$settings = array_merge(array('duration' => static::getCacheTimeout()), static::$defaultCacheSettings, $settings);
+		Cache::config($name, $settings);
 	}
 
 	/**
