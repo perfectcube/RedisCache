@@ -10,25 +10,27 @@ class RedisSession implements CakeSessionHandlerInterface {
 	 * Placeholder for cached Redis resource
 	 *
 	 * @var object
-	 * @access public
+	 * @access protected
 	 */
-	public $_Predis;
+	protected $_Predis;
 
 	/**
 	 * Seconds until key should expire
 	 *
 	 * @var int
-	 * @access public
+	 * @access protected
 	 */
-	public $timeout;
+	protected $timeout;
 
 	/**
 	 * Prefix to apply to all Redis session keys
 	 *
 	 * @var string
-	 * @access public
+	 * @access protected
 	 */
-	public $prefix;
+	protected $prefix;
+
+	static $hest;
 
 	/**
 	  * OPEN
@@ -51,6 +53,7 @@ class RedisSession implements CakeSessionHandlerInterface {
 			array('prefix' => $this->prefix)
 		);
 
+		Configure::write('RedisCache.SessionStoragePredis', $this);
 		return true;
 	}
 

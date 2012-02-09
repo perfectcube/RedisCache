@@ -34,7 +34,8 @@ class RedisCache {
 		'cookie' => 'CAKEPHP',
 		'timeout' => 60,
 		'handler' => array(
-			'engine' => 'RedisCache.RedisSession'
+			'engine' => 'RedisCache.RedisSession',
+			'config' => 'session'
 		)
 	);
 
@@ -70,7 +71,7 @@ class RedisCache {
 			static::configureCacheTimeout(function() {
 				$duration = '+999 days';
 				if (Configure::read('debug') >= 1) {
-					$duration = '+10 seconds';
+					$duration = '+1 seconds';
 				}
 				return $duration;
 			});
