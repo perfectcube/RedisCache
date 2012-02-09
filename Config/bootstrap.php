@@ -19,5 +19,6 @@ if (!RedisCache::hasSettings('session')) {
 
 // Redis plugin depends on Predis
 // @link https://github.com/nrk/predis
-App::import('Lib', 'RedisCache.Predis/Autoloader');
+$paths = App::path('Lib', 'RedisCache');
+require_once($paths[0] . 'Predis/autoload.php');
 Predis\Autoloader::register();
