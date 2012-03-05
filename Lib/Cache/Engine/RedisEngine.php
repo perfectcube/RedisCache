@@ -32,11 +32,10 @@ class RedisEngine extends CacheEngine {
 
 		parent::init($settings);
 
-		if (!isset($this->_Predis)) {
-			$this->_Predis = new Predis\Client(
-				$settings,
-				array('prefix' => $this->settings['prefix'])
-			);
+		if (!isset($this->redis)) {
+			$this->redis = new Redis();
+			$this->redis->pconnect($this->settings['hostname'], $this->settings['port']);
+			$this->redis->setOption(Redis::OPT_PREFIX, $this->settings['prefix']);
 		}
 
 		return true;
@@ -51,7 +50,7 @@ class RedisEngine extends CacheEngine {
 	 * @return boolean
 	 */
 	public function read($key = '') {
-		return $this->_expand($this->_Predis->get($key));
+		return $this->redis->get($key);
 	}
 
 	/**
@@ -65,7 +64,7 @@ class RedisEngine extends CacheEngine {
 	 * @return boolean
 	 */
 	public function write($key = '', $data = null, $duration = 3600) {
-		return $this->_Predis->setex($key, $duration, $this->_compress($data));
+		return $this->redis->setex($key, $duration, $data);
 	}
 
 	/**
@@ -78,7 +77,7 @@ class RedisEngine extends CacheEngine {
 	 * @return boolean
 	 */
 	public function increment($key = '', $offset = 1) {
-		return $this->_Predis->incrby($key, $offset);
+		return $this->redis->incrby($key, $offset);
 	}
 
 	/**
@@ -91,7 +90,7 @@ class RedisEngine extends CacheEngine {
 	 * @return boolean
 	 */
 	public function decrement($key = '', $offset = 1) {
-		return $this->_Predis->decrby($key, $offset);
+		return $this->redis->decrby($key, $offset);
 	}
 
 	/**
@@ -104,7 +103,7 @@ class RedisEngine extends CacheEngine {
 	 */
 	public function delete($key = '') {
 		// Predis::del returns an integer 1 on delete, convert to boolean
-		return $this->_Predis->del($key) ? true : false;
+		return $this->redis->delete($key) ? true : false;
 	}
 
 	/**
@@ -127,34 +126,5 @@ class RedisEngine extends CacheEngine {
 	 */
 	public function gc() {
 		return true;
-	}
-
-	/**
-	 * Compress $data as redis stores strings.
-	 * Do not compress numeric data as compressed numbers cannot be used for incr/decr operations
-	 *
-	 * @param null $data
-	 * @return null|string
-	 * @access private
-	 */
-	protected function _compress($data = null) {
-		if (is_array($data) || is_object($data) || ! preg_match('/^\d$/', $data)) {
-			return serialize($data);
-		}
-		return $data;
-	}
-
-	/**
-	 * Decompress stored data
-	 *
-	 * @param null $data
-	 * @return mixed
-	 * @access private
-	 */
-	protected function _expand( $data = null ) {
-		if (false === $return = @unserialize($data)) {
-			$return = $data;
-		}
-		return $return;
 	}
 }
