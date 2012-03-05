@@ -100,8 +100,8 @@ class RedisCache {
 			$settings
 		);
 
-		$settings['prefix'] .= '_' . $name . '_';
-		$settings['prefix'] = str_replace('__', '_', $settings['prefix']);
+		$settings['prefix'] .= '.' . str_replace('_', '.', $name) . '.';
+		$settings['prefix'] = str_replace('..', '.', $settings['prefix']);
 
 		Cache::config($name, $settings);
 	}
@@ -117,12 +117,15 @@ class RedisCache {
 	public static function configureSession($settings = array()) {
 		$settings = array_merge(
 			array(
-				'prefix' => Inflector::slug(basename(dirname(dirname(APP)))) . '_session_'
+				'prefix' => 'sessions.' . Inflector::slug(basename(dirname(dirname(APP))))
 			),
 			static::$defaultSessionSettings,
 			Configure::read('RedisCache.session'),
 			$settings
 		);
+
+		$settings['prefix'] .= '.';
+		$settings['prefix'] = str_replace('..', '.', $settings['prefix']);
 
 		Configure::write('Session', $settings);
 	}
