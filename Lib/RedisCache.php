@@ -93,7 +93,7 @@ class RedisCache {
 		$settings = array_merge(
 			array(
 				'duration'	=> static::getCacheTimeout(),
-				'prefix'	=> Inflector::slug(basename(dirname(dirname(APP))))
+				'prefix'	=> basename(dirname(dirname(APP)))
 			),
 			static::$defaultCacheSettings,
 			Configure::read('RedisCache.cache'),
@@ -117,7 +117,7 @@ class RedisCache {
 	public static function configureSession($settings = array()) {
 		$settings = array_merge(
 			array(
-				'prefix' => 'sessions.' . Inflector::slug(basename(dirname(dirname(APP))))
+				'prefix' => 'sessions.' . basename(dirname(dirname(APP)))
 			),
 			static::$defaultSessionSettings,
 			Configure::read('RedisCache.session'),
