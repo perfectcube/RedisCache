@@ -24,7 +24,7 @@ class RedisEngine extends CacheEngine {
 		$settings = array_merge(
 			array(
 				'engine' => 'Redis',
-				'prefix' => Inflector::slug(APP_DIR) . '_'
+				'prefix' => Inflector::slug(basename(dirname(dirname(APP)))) . '_'
 			),
 			$settings,
 			RedisCache::settings('cache')
@@ -36,6 +36,7 @@ class RedisEngine extends CacheEngine {
 			$this->redis = new Redis();
 			$this->redis->pconnect($this->settings['hostname'], $this->settings['port']);
 			$this->redis->setOption(Redis::OPT_PREFIX, $this->settings['prefix']);
+			$this->redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
 		}
 
 		return true;

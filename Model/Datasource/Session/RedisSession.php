@@ -12,7 +12,7 @@ class RedisSession implements CakeSessionHandlerInterface {
 	 * @var object
 	 * @access protected
 	 */
-	protected $_Predis;
+	protected $redis;
 
 	/**
 	 * Seconds until key should expire
@@ -30,8 +30,6 @@ class RedisSession implements CakeSessionHandlerInterface {
 	 */
 	protected $prefix;
 
-	static $hest;
-
 	/**
 	  * OPEN
 	  * - Connect to Redis
@@ -42,18 +40,20 @@ class RedisSession implements CakeSessionHandlerInterface {
 	  * @return boolean true
 	  */
 	public function open() {
-		$name = Configure::read('Session.cookie');
-		$timeout = Configure::read('Session.timeout');
-
-		$this->timeout = $timeout * Security::inactiveMins();
-		$this->prefix = $name;
-
-		$this->_Predis = new Predis\Client(
-			RedisCache::settings('session'),
-			array('prefix' => $this->prefix)
+		$this->settings = array_merge(
+			array(
+				'engine' => 'Redis',
+				'prefix' => Inflector::slug(basename(dirname(dirname(APP)))) . '_session_'
+			),
+			Configure::read('Session')
 		);
 
-		Configure::write('RedisCache.SessionStoragePredis', $this);
+		$this->timeout = Configure::read('Session.timeout') * Security::inactiveMins();
+
+		$this->redis = new Redis();
+		$this->redis->pconnect($this->settings['hostname'], $this->settings['port']);
+		$this->redis->setOption(Redis::OPT_PREFIX, $this->settings['prefix']);
+		$this->redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
 		return true;
 	}
 
@@ -65,7 +65,6 @@ class RedisSession implements CakeSessionHandlerInterface {
 	 * @return boolean true
 	 */
 	public function close() {
-		$this->_Predis->disconnect();
 		return true;
 	}
 
@@ -79,7 +78,7 @@ class RedisSession implements CakeSessionHandlerInterface {
 	 * @return boolean
 	 */
 	public function read($session_id = '') {
-		return $this->_Predis->get($session_id);
+		return $this->redis->get($session_id);
 	}
 
 	/**
@@ -94,7 +93,7 @@ class RedisSession implements CakeSessionHandlerInterface {
 	 */
 	public function write($session_id = '', $data = null) {
 		if ($session_id && is_string($session_id)) {
-			return $this->_Predis->setex($session_id, $this->timeout, $data);
+			return $this->redis->setex($session_id, $this->timeout, $data);
 		}
 		return false;
 	}
@@ -110,7 +109,7 @@ class RedisSession implements CakeSessionHandlerInterface {
 	 */
 	public function destroy($session_id = '') {
 		// Predis::del returns an integer 1 on delete, convert to boolean
-		return $this->_Predis->del($session_id) ? true : false;
+		return $this->redis->del($session_id) ? true : false;
 	}
 
 	/**

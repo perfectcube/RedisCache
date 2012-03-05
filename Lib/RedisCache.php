@@ -19,7 +19,6 @@ class RedisCache {
 	*/
 	protected static $defaultCacheSettings = array(
 		'engine'	=> 'RedisCache.Redis',
-		'serialize'	=> false,
 		'hostname'	=> '127.0.0.1',
 		'port'		=> 6379,
 		'password'	=> null
@@ -31,12 +30,15 @@ class RedisCache {
 	* @var array
 	*/
 	protected static $defaultSessionSettings = array(
-		'cookie' => 'CAKEPHP',
-		'timeout' => 60,
-		'handler' => array(
+		'cookie'	=> 'CAKEPHP',
+		'timeout'	=> 60,
+		'handler'	=> array(
 			'engine' => 'RedisCache.RedisSession',
-			'config' => 'session'
-		)
+			'config' => 'cache'
+		),
+		'hostname'	=> '127.0.0.1',
+		'port'		=> 6379,
+		'password'	=> null
 	);
 
 	/**
@@ -88,7 +90,14 @@ class RedisCache {
 	* @return void
 	*/
 	public static function configureCache($name, $settings = array()) {
-		$settings = array_merge(array('duration' => static::getCacheTimeout()), static::$defaultCacheSettings, $settings);
+		$settings = array_merge(
+			array(
+				'duration'	=> static::getCacheTimeout(),
+				'prefix'	=> Inflector::slug(basename(dirname(dirname(APP)))) . '_' . $name . '_'
+			),
+			static::$defaultCacheSettings,
+			$settings
+		);
 		Cache::config($name, $settings);
 	}
 
@@ -101,11 +110,16 @@ class RedisCache {
 	* @return void
 	*/
 	public static function configureSession($settings = array()) {
-		if (!empty($settings) && is_string($settings)) {
-			$settings = array('cookie' => $settings);
-		}
+		$settings = array_merge(
+			array(
+				'duration'	=> static::getCacheTimeout(),
+				'prefix'	=> Inflector::slug(basename(dirname(dirname(APP)))) . '_session_'
+			),
+			static::$defaultSessionSettings,
+			$settings
+		);
 
-		Configure::write('Session', array_merge(static::$defaultSessionSettings, (array)$settings));
+		Configure::write('Session', $settings);
 	}
 
 	/**
