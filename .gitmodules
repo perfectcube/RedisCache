@@ -1,3 +1,0 @@
-[submodule "Lib/Predis"]
-	path = Lib/Predis
-	url = git@github.com:nodesagency/predis.git
