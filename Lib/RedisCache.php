@@ -31,14 +31,15 @@ class RedisCache {
 	*/
 	protected static $defaultSessionSettings = array(
 		'cookie'	=> 'CAKEPHP',
-		'timeout'	=> 60,
+		'timeout'	=> 120,
 		'handler'	=> array(
 			'engine' => 'RedisCache.RedisSession',
 			'config' => 'cache'
 		),
 		'hostname'	=> '127.0.0.1',
 		'port'		=> 6379,
-		'password'	=> null
+		'password'	=> null,
+		'cookieTimeout' => 120
 	);
 
 	/**
