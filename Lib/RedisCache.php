@@ -30,16 +30,16 @@ class RedisCache {
 	* @var array
 	*/
 	protected static $defaultSessionSettings = array(
-		'cookie'	=> 'CAKEPHP',
-		'timeout'	=> 120,
-		'handler'	=> array(
+		'cookie'		=> 'CAKEPHP',
+		'timeout'		=> 720,
+		'handler'		=> array(
 			'engine' => 'RedisCache.RedisSession',
 			'config' => 'cache'
 		),
-		'hostname'	=> '127.0.0.1',
-		'port'		=> 6379,
-		'password'	=> null,
-		'cookieTimeout' => 120
+		'hostname'		=> '127.0.0.1',
+		'port'			=> 6379,
+		'password'		=> null,
+		'cookieTimeout' => 720
 	);
 
 	/**
