@@ -35,7 +35,7 @@ class RedisEngine extends CacheEngine {
 		if (!isset($this->redis)) {
 			$this->redis = new Redis();
 			$this->redis->pconnect($this->settings['hostname'], $this->settings['port']);
-			$this->redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_IGBINARY);
+			$this->redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
 		}
 
 		return true;
