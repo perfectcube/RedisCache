@@ -115,8 +115,11 @@ class RedisEngine extends CacheEngine {
 	 * @return boolean
 	 */
 	public function clear($check) {
-		$keys = $this->redis->keys(sprintf('%s*', $this->settings['prefix']));
-		return $this->redis->delete($keys);
+//		$keys = $this->redis->keys(sprintf('%s*', $this->settings['prefix']));
+//		var_dump($this->settings);
+//		die(debug($keys));
+//		return $this->redis->delete($keys);
+		return true;
 	}
 
 	/**
