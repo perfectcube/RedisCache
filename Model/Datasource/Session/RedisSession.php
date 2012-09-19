@@ -53,6 +53,7 @@ class RedisSession implements CakeSessionHandlerInterface {
 		$this->redis = new Redis();
 		$this->redis->pconnect($this->settings['hostname'], $this->settings['port']);
 		$this->redis->setOption(Redis::OPT_PREFIX, $this->settings['prefix']);
+		$this->redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_IGBINARY);
 		return true;
 	}
 
