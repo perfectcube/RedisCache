@@ -74,7 +74,7 @@ class RedisCache {
 			static::configureCacheTimeout(function() {
 				$duration = '+999 days';
 				if (Configure::read('debug') >= 1) {
-					$duration = '10 minutes';
+					$duration = '+10 seconds';
 				}
 				return $duration;
 			});
